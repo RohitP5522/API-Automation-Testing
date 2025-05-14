@@ -4,15 +4,18 @@ trigger:
       - main
 
 schedules:
-- cron: "0 6 * * *" # 6 AM UTC daily
+- cron: "0 6 * * *"  # 6 AM UTC daily
   displayName: Daily Run
   branches:
     include:
       - main
   always: true
 
+variables:
+- group: EmailSecrets  # Secure email credentials
+
 pool:
-  name: Default  # or MyAgentPool (check exact name and permission)
+  name: Default  # or MyAgentPool (verify name)
 
 steps:
 - task: NodeTool@0
@@ -30,4 +33,7 @@ steps:
 
 - script: |
     node send-email.js
+  env:
+    EMAIL_USER: $(EMAIL_USER)
+    EMAIL_PASS: $(EMAIL_PASS)
   displayName: 'Send Cypress Report Email'
