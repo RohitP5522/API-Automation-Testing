@@ -1,19 +1,45 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+  branches:
+    include:
+      - main
+
+schedules:
+- cron: "0 9 * * 1-5" # 9 AM Mon-Fri UTC
+  displayName: Daily Test Run
+  branches:
+    include:
+      - main
+  always: true
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    npm install
+  displayName: 'Install dependencies'
+
+- script: |
+    npx cypress run
+  displayName: 'Run Cypress tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/cypress/reports/*.xml'
+  condition: succeededOrFailed()
+
+- task: CopyFiles@2
+  inputs:
+    contents: '**/cypress/reports/**/*'
+    targetFolder: '$(Build.ArtifactStagingDirectory)/cypress-report'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/cypress-report'
+    ArtifactName: 'TestReport'
