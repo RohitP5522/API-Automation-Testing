@@ -4,7 +4,7 @@ trigger:
       - main
 
 schedules:
-- cron: "0 6 * * *" # 6 AM UTC every day
+- cron: "0 6 * * *" # 6 AM UTC daily
   displayName: Daily Run
   branches:
     include:
@@ -12,7 +12,7 @@ schedules:
   always: true
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default  # or MyAgentPool (check exact name and permission)
 
 steps:
 - task: NodeTool@0
