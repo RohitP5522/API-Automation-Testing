@@ -4,8 +4,8 @@ trigger:
       - main
 
 schedules:
-- cron: "0 9 * * 1-5" # 9 AM Mon-Fri UTC
-  displayName: Daily Test Run
+- cron: "0 6 * * *" # 6 AM UTC every day
+  displayName: Daily Run
   branches:
     include:
       - main
@@ -21,25 +21,13 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
-  displayName: 'Install dependencies'
+    npm ci
+  displayName: 'Install Dependencies'
 
 - script: |
     npx cypress run
-  displayName: 'Run Cypress tests'
+  displayName: 'Run Cypress Tests'
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/cypress/reports/*.xml'
-  condition: succeededOrFailed()
-
-- task: CopyFiles@2
-  inputs:
-    contents: '**/cypress/reports/**/*'
-    targetFolder: '$(Build.ArtifactStagingDirectory)/cypress-report'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/cypress-report'
-    ArtifactName: 'TestReport'
+- script: |
+    node send-email.js
+  displayName: 'Send Cypress Report Email'
