@@ -1,0 +1,105 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-05-14T12:09:51.587Z",
+    "end": "2025-05-14T12:09:52.245Z",
+    "duration": 658,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "435dd45e-9c6c-4df2-bccc-aa962ecf8150",
+      "title": "",
+      "fullFile": "cypress\\e2e\\updateUser.cy.js",
+      "file": "cypress\\e2e\\updateUser.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "4262805f-07fb-4cf5-aa41-cc913a09163b",
+          "title": "PUT Update User",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should update user with new data",
+              "fullTitle": "PUT Update User should update user with new data",
+              "timedOut": null,
+              "duration": 558,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.reqresRequest({\n  method: 'PUT',\n  url: '/api/users/2',\n  body: {\n    name: 'morpheus',\n    job: 'zion leader'\n  }\n}).then(response => {\n  expect(response.status).to.eq(200);\n  expect(response.body).to.have.property('updatedAt');\n});",
+              "err": {},
+              "uuid": "910b6d89-27e0-43b0-804d-0f08923a8b11",
+              "parentUUID": "4262805f-07fb-4cf5-aa41-cc913a09163b",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "910b6d89-27e0-43b0-804d-0f08923a8b11"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 558,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

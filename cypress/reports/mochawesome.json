@@ -1,0 +1,105 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-05-14T12:09:41.040Z",
+    "end": "2025-05-14T12:09:42.095Z",
+    "duration": 1055,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "a008cd5e-1d65-4baa-a3da-11b39137c267",
+      "title": "",
+      "fullFile": "cypress\\e2e\\createUser.cy.js",
+      "file": "cypress\\e2e\\createUser.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "941c849f-b57f-4470-934e-b9f8908dff65",
+          "title": "Create User with Reqres API Key",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should successfully create a user",
+              "fullTitle": "Create User with Reqres API Key should successfully create a user",
+              "timedOut": null,
+              "duration": 1006,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: 'POST',\n  url: '/api/users',\n  headers: {\n    'Content-Type': 'application/json',\n    'x-api-key': Cypress.env('reqresApiKey') // 👈 using the stored API key\n  },\n  body: {\n    name: 'morpheus',\n    job: 'leader'\n  }\n}).then(response => {\n  expect(response.status).to.eq(201);\n  expect(response.body).to.have.property('name', 'morpheus');\n  expect(response.body).to.have.property('job', 'leader');\n  expect(response.body).to.have.property('id');\n  expect(response.body).to.have.property('createdAt');\n});",
+              "err": {},
+              "uuid": "bad1f0b5-fc0e-4d9d-9ca7-40195e1f2f76",
+              "parentUUID": "941c849f-b57f-4470-934e-b9f8908dff65",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "bad1f0b5-fc0e-4d9d-9ca7-40195e1f2f76"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 1006,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
