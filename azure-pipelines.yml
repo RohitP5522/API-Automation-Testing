@@ -1,3 +1,22 @@
+trigger:
+  branches:
+    include:
+      - main
+
+schedules:
+  - cron: "0 6 * * *"  # 6 AM UTC daily
+    displayName: Daily Run
+    branches:
+      include:
+        - main
+    always: true
+
+variables:
+  - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
+
+pool:
+  name: Default  # or your agent pool name
+
 steps:
   - task: NodeTool@0
     inputs:
@@ -7,10 +26,6 @@ steps:
   - script: |
       npm ci
     displayName: 'Install Dependencies'
-
-  - powershell: |
-      Remove-Item -Path "cypress/reports" -Recurse -Force -ErrorAction SilentlyContinue
-    displayName: 'Clean Previous Reports'
 
   - script: |
       npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
