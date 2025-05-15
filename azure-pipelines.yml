@@ -3,8 +3,19 @@ trigger:
     include:
       - main
 
+schedules:
+- cron: "0 6 * * *"  # 6 AM UTC daily
+  displayName: Daily Run
+  branches:
+    include:
+      - main
+  always: true
+
+variables:
+- group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
+
 pool:
-  name: Default
+  name: Default  # or your agent pool name
 
 steps:
 - task: NodeTool@0
@@ -12,14 +23,16 @@ steps:
     versionSpec: '18.x'
   displayName: 'Install Node.js'
 
-- script: npm ci
+- script: |
+    npm ci
   displayName: 'Install Dependencies'
 
 - script: |
-    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
   displayName: 'Run Cypress Tests'
 
-- script: node send-email.js
+- script: |
+    node send-email.js
   env:
     EMAIL_USER: $(EMAIL_USER)
     EMAIL_PASS: $(EMAIL_PASS)
