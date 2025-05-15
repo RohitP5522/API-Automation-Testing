@@ -12,10 +12,10 @@ schedules:
   always: true
 
 variables:
-- group: EmailSecrets  # Secure email credentials
+- group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS as secret variables
 
 pool:
-  name: Default  # or MyAgentPool (verify name)
+  name: Default  # Make sure this matches your self-hosted or Microsoft-hosted pool name
 
 steps:
 - task: NodeTool@0
@@ -28,12 +28,8 @@ steps:
   displayName: 'Install Dependencies'
 
 - script: |
-    npx cypress run
+    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
   displayName: 'Run Cypress Tests'
 
 - script: |
     node send-email.js
-  env:
-    EMAIL_USER: $(EMAIL_USER)
-    EMAIL_PASS: $(EMAIL_PASS)
-  displayName: 'Send Cypress Report Email'
