@@ -4,7 +4,7 @@ trigger:
       - main
 
 schedules:
-  - cron: "0 6 * * *"  # 6 AM UTC daily
+  - cron: "0 6 * * *"  # Runs daily at 6 AM UTC
     displayName: Daily Run
     branches:
       include:
@@ -12,10 +12,10 @@ schedules:
     always: true
 
 variables:
-  - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
+  - group: EmailSecrets  # This should contain EMAIL_USER and EMAIL_PASS
 
 pool:
-  name: Default  # Use your Azure agent pool
+  name: Default  # Replace with your agent pool name if different
 
 steps:
   - task: NodeTool@0
@@ -23,11 +23,14 @@ steps:
       versionSpec: '18.x'
     displayName: 'Install Node.js'
 
-  - script: npm ci
+  - script: |
+      npm ci
     displayName: 'Install Dependencies'
 
   - script: |
-      npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+      npx cypress run --spec "cypress/e2e/**/*.cy.js" ^
+      --reporter mochawesome ^
+      --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
     displayName: 'Run Cypress Tests'
 
   - script: |
