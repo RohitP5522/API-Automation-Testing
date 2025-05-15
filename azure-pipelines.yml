@@ -12,10 +12,10 @@ schedules:
   always: true
 
 variables:
-- group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS as secret variables
+- group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
 
 pool:
-  name: Default  # Make sure this matches your self-hosted or Microsoft-hosted pool name
+  name: Default  # or your agent pool name
 
 steps:
 - task: NodeTool@0
@@ -33,3 +33,7 @@ steps:
 
 - script: |
     node send-email.js
+  env:
+    EMAIL_USER: $(EMAIL_USER)
+    EMAIL_PASS: $(EMAIL_PASS)
+  displayName: 'Send Cypress Report Email'
