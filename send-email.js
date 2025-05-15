@@ -1,5 +1,22 @@
 const nodemailer = require('nodemailer');
 const path = require('path');
+const fs = require('fs');
+
+// Load and parse JSON report
+const reportPath = path.resolve(__dirname, 'cypress/reports/mochawesome.json');
+let summary = 'No test summary available.';
+if (fs.existsSync(reportPath)) {
+  const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+  summary = `
+🧪 **Cypress Test Summary**
+----------------------------
+✅ Passed:   ${report.stats.passes}
+❌ Failed:   ${report.stats.failures}
+⚠️  Skipped:  ${report.stats.pending}
+📊 Total:    ${report.stats.tests}
+⏱ Duration: ${report.stats.duration} ms
+`;
+}
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -13,7 +30,7 @@ const mailOptions = {
   from: process.env.EMAIL_USER,
   to: 'rohitpatil7424@gmail.com',
   subject: 'Cypress Test Report',
-  text: 'Attached is the latest Cypress test report.',
+  text: summary, // Summary in plain text email
   attachments: [
     {
       filename: 'mochawesome.html',
