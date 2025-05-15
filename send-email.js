@@ -2,14 +2,12 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
-// Load and parse JSON report
-const reportPath = path.resolve(__dirname, 'cypress/reports/mochawesome.json');
+const reportPath = path.resolve(__dirname, 'cypress/reports/merged.json');
 let summary = 'No test summary available.';
 
 if (fs.existsSync(reportPath)) {
-  try {
-    const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
-    summary = `
+  const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+  summary = `
 🧪 Cypress Test Summary
 ---------------------------
 
@@ -18,23 +16,17 @@ if (fs.existsSync(reportPath)) {
 ⚠️  Skipped:  ${report.stats.pending}
 📊 Total:    ${report.stats.tests}
 ⏱ Duration: ${report.stats.duration} ms
-    `;
-  } catch (error) {
-    console.error('Error parsing mochawesome.json:', error.message);
-  }
+`;
 }
 
-// Create transporter using Gmail (Nodemailer handles port)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  secure: true, // true = SSL (recommended)
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-// Email content
 const mailOptions = {
   from: process.env.EMAIL_USER,
   to: 'rohitpatil7424@gmail.com',
@@ -48,12 +40,11 @@ const mailOptions = {
   ],
 };
 
-// Send email
-transporter.sendMail(mailOptions, (error, info) => {
+transporter.sendMail(mailOptions, function (error, info) {
   if (error) {
     console.error('Error sending email:', error);
     process.exit(1);
   } else {
-    console.log('✅ Email sent:', info.response);
+    console.log('Email sent: ' + info.response);
   }
 });
