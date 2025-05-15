@@ -2,20 +2,25 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
-// Load and parse JSON report
-const reportPath = path.resolve(__dirname, 'cypress/reports/mochawesome.json');
+const reportHtmlPath = path.resolve(__dirname, 'cypress/reports/mochawesome.html');
+const reportJsonPath = path.resolve(__dirname, 'cypress/reports/mochawesome.json');
+
 let summary = 'No test summary available.';
-if (fs.existsSync(reportPath)) {
-  const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
-  summary = 
-🧪 **Cypress Test Summary**
-----------------------------
-✅ Passed:   ${report.stats.passes}
-❌ Failed:   ${report.stats.failures}
-⚠️  Skipped:  ${report.stats.pending}
-📊 Total:    ${report.stats.tests}
-⏱ Duration: ${report.stats.duration} ms
-;
+
+if (fs.existsSync(reportJsonPath)) {
+  try {
+    const report = JSON.parse(fs.readFileSync(reportJsonPath, 'utf-8'));
+    summary = "\n🧪 Cypress Test Summary\n---------------------------\n\n" +
+      "✅ Passed:   " + report.stats.passes + "\n" +
+      "❌ Failed:   " + report.stats.failures + "\n" +
+      "⚠️  Skipped:  " + report.stats.pending + "\n" +
+      "📊 Total:    " + report.stats.tests + "\n" +
+      "⏱ Duration: " + report.stats.duration + " ms\n";
+  } catch (error) {
+    console.error('Error parsing mochawesome JSON report:', error);
+  }
+} else {
+  console.warn('Mochawesome JSON report not found at:', reportJsonPath);
 }
 
 const transporter = nodemailer.createTransport({
@@ -30,20 +35,20 @@ const mailOptions = {
   from: process.env.EMAIL_USER,
   to: 'rohitpatil7424@gmail.com',
   subject: 'Cypress Test Report',
-  text: summary, // Summary in plain text email
+  text: summary,
   attachments: [
     {
       filename: 'mochawesome.html',
-      path: path.resolve(__dirname, 'cypress/reports/mochawesome.html'),
+      path: reportHtmlPath,
     },
   ],
 };
 
-transporter.sendMail(mailOptions, function (error, info) {
+transporter.sendMail(mailOptions, (error, info) => {
   if (error) {
     console.error('Error sending email:', error);
     process.exit(1);
   } else {
-    console.log('Email sent: ' + info.response);
+    console.log('Email sent:', info.response);
   }
 });
