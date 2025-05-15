@@ -1,35 +1,14 @@
-trigger:
-  branches:
-    include:
-      - main
-
-schedules:
-- cron: "0 6 * * *"  # 6 AM UTC daily
-  displayName: Daily Run
-  branches:
-    include:
-      - main
-  always: true
-
-variables:
-- group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
-
-pool:
-  name: Default  # or your agent pool name
-
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+- script: |
+    rm -rf cypress/reports
+  displayName: 'Clean Previous Reports'
 
 - script: |
-    npm ci
-  displayName: 'Install Dependencies'
-
-- script: |
-    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+    npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
   displayName: 'Run Cypress Tests'
+
+- script: |
+    npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+  displayName: 'Merge Mochawesome Reports'
 
 - script: |
     node send-email.js
