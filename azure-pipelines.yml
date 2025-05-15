@@ -27,14 +27,18 @@ steps:
       npm ci
     displayName: 'Install Dependencies'
 
-  # 👇 Cypress run with mochawesome (overwrite=true to prevent merging issues)
+  # 👇 List all test files for debug (optional)
   - script: |
-      npx cypress run --spec "cypress/e2e/**/*.cy.js" ^
+      dir cypress\e2e\
+    displayName: 'List Test Files'
+
+  # ✅ FIXED: Run all tests in root & subfolders
+  - script: |
+      npx cypress run --spec "cypress/e2e/*.cy.js,cypress/e2e/**/*.cy.js" ^
       --reporter mochawesome ^
       --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
     displayName: 'Run Cypress Tests'
 
-  # 👇 Send Email with mochawesome report (no need to merge now)
   - script: |
       node send-email.js
     env:
