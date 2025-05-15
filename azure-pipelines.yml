@@ -15,7 +15,7 @@ variables:
   - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
 
 pool:
-  name: Default  # Use your agent pool name
+  name: Default  # Use your Azure agent pool
 
 steps:
   - task: NodeTool@0
@@ -23,20 +23,11 @@ steps:
       versionSpec: '18.x'
     displayName: 'Install Node.js'
 
-  - script: |
-      npm ci
+  - script: npm ci
     displayName: 'Install Dependencies'
 
-  # 👇 List all test files for debug (optional)
   - script: |
-      dir cypress\e2e\
-    displayName: 'List Test Files'
-
-  # ✅ FIXED: Run all tests in root & subfolders
-  - script: |
-      npx cypress run --spec "cypress/e2e/*.cy.js,cypress/e2e/**/*.cy.js" ^
-      --reporter mochawesome ^
-      --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
+      npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
     displayName: 'Run Cypress Tests'
 
   - script: |
