@@ -2,21 +2,26 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
+// Load and parse merged report
 const reportPath = path.resolve(__dirname, 'cypress/reports/merged.json');
-let summary = 'No test summary available.';
+let summary = '⚠️ No test summary available (report missing or corrupted).';
 
 if (fs.existsSync(reportPath)) {
-  const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
-  summary = `
+  try {
+    const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+    summary = `
 🧪 Cypress Test Summary
----------------------------
+----------------------------
 
 ✅ Passed:   ${report.stats.passes}
 ❌ Failed:   ${report.stats.failures}
-⚠️  Skipped:  ${report.stats.pending}
+⚠️ Skipped:  ${report.stats.pending}
 📊 Total:    ${report.stats.tests}
 ⏱ Duration: ${report.stats.duration} ms
 `;
+  } catch (err) {
+    console.error('Failed to parse merged report:', err);
+  }
 }
 
 const transporter = nodemailer.createTransport({
