@@ -15,7 +15,7 @@ variables:
   - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
 
 pool:
-  name: Default  # or your agent pool name
+  name: Default  # Use your agent pool name
 
 steps:
   - task: NodeTool@0
@@ -27,14 +27,14 @@ steps:
       npm ci
     displayName: 'Install Dependencies'
 
+  # 👇 Cypress run with mochawesome (overwrite=true to prevent merging issues)
   - script: |
-      npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+      npx cypress run --spec "cypress/e2e/**/*.cy.js" ^
+      --reporter mochawesome ^
+      --reporter-options reportDir=cypress/reports,overwrite=true,html=true,json=true
     displayName: 'Run Cypress Tests'
 
-  - script: |
-      npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
-    displayName: 'Merge Mochawesome Reports'
-
+  # 👇 Send Email with mochawesome report (no need to merge now)
   - script: |
       node send-email.js
     env:
