@@ -4,8 +4,8 @@ trigger:
       - main
 
 schedules:
-  - cron: "0 6 * * *"  # 6 AM UTC daily
-    displayName: Daily Run
+  - cron: "0 6 * * *"  # Daily run at 6 AM UTC
+    displayName: Daily Schedule
     branches:
       include:
         - main
@@ -15,7 +15,7 @@ variables:
   - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
 
 pool:
-  name: Default  # Use your self-hosted agent pool or Azure-hosted
+  name: Default  # Use your agent pool name
 
 steps:
   - task: NodeTool@0
@@ -30,20 +30,16 @@ steps:
   - script: |
       npx cypress run --spec "cypress/e2e/**/*.cy.js" ^
       --reporter mochawesome ^
-      --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
+      --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
     displayName: 'Run Cypress Tests'
 
   - script: |
       npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged.json
-    displayName: 'Merge Cypress Reports'
-
-  - script: |
-      npx marge cypress/reports/merged.json --reportDir cypress/reports --reportFilename mochawesome
-    displayName: 'Generate HTML Report'
+    displayName: 'Merge Mochawesome Reports'
 
   - script: |
       node send-email.js
     env:
       EMAIL_USER: $(EMAIL_USER)
       EMAIL_PASS: $(EMAIL_PASS)
-    displayName: 'Send Cypress Report Email'
+    displayName: 'Send Cypress Email Report'
