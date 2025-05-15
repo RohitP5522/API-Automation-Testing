@@ -12,7 +12,7 @@ describe('Create User with Reqres API Key', () => {
         job: 'leader'
       }
     }).then((response) => {
-      expect(response.status).to.eq(200);
+      expect(response.status).to.eq(201);
       expect(response.body).to.have.property('name', 'morpheus');
       expect(response.body).to.have.property('job', 'leader');
       expect(response.body).to.have.property('id');
