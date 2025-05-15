@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2025-05-14T12:09:41.040Z",
-    "end": "2025-05-14T12:09:42.095Z",
-    "duration": 1055,
+    "start": "2025-05-15T09:14:37.337Z",
+    "end": "2025-05-15T09:14:38.560Z",
+    "duration": 1223,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,49 +18,49 @@
   },
   "results": [
     {
-      "uuid": "a008cd5e-1d65-4baa-a3da-11b39137c267",
+      "uuid": "a42379bd-d4c9-42c4-8e0c-dfb39255a592",
       "title": "",
-      "fullFile": "cypress\\e2e\\createUser.cy.js",
-      "file": "cypress\\e2e\\createUser.cy.js",
+      "fullFile": "cypress\\e2e\\updateUser.cy.js",
+      "file": "cypress\\e2e\\updateUser.cy.js",
       "beforeHooks": [],
       "afterHooks": [],
       "tests": [],
       "suites": [
         {
-          "uuid": "941c849f-b57f-4470-934e-b9f8908dff65",
-          "title": "Create User with Reqres API Key",
+          "uuid": "cef321fa-617e-44b0-8f15-895a5ba21003",
+          "title": "PUT Update User",
           "fullFile": "",
           "file": "",
           "beforeHooks": [],
           "afterHooks": [],
           "tests": [
             {
-              "title": "should successfully create a user",
-              "fullTitle": "Create User with Reqres API Key should successfully create a user",
+              "title": "should update user with new data",
+              "fullTitle": "PUT Update User should update user with new data",
               "timedOut": null,
-              "duration": 1006,
+              "duration": 1195,
               "state": "passed",
               "speed": "fast",
               "pass": true,
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "cy.request({\n  method: 'POST',\n  url: '/api/users',\n  headers: {\n    'Content-Type': 'application/json',\n    'x-api-key': Cypress.env('reqresApiKey') // 👈 using the stored API key\n  },\n  body: {\n    name: 'morpheus',\n    job: 'leader'\n  }\n}).then(response => {\n  expect(response.status).to.eq(201);\n  expect(response.body).to.have.property('name', 'morpheus');\n  expect(response.body).to.have.property('job', 'leader');\n  expect(response.body).to.have.property('id');\n  expect(response.body).to.have.property('createdAt');\n});",
+              "code": "cy.reqresRequest({\n  method: 'PUT',\n  url: '/api/users/2',\n  body: {\n    name: 'morpheus',\n    job: 'zion leader'\n  }\n}).then(response => {\n  expect(response.status).to.eq(200);\n  expect(response.body).to.have.property('updatedAt');\n});",
               "err": {},
-              "uuid": "bad1f0b5-fc0e-4d9d-9ca7-40195e1f2f76",
-              "parentUUID": "941c849f-b57f-4470-934e-b9f8908dff65",
+              "uuid": "d7a5bbf7-ec4d-45fd-a643-f51ed4d51f25",
+              "parentUUID": "cef321fa-617e-44b0-8f15-895a5ba21003",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "bad1f0b5-fc0e-4d9d-9ca7-40195e1f2f76"
+            "d7a5bbf7-ec4d-45fd-a643-f51ed4d51f25"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 1006,
+          "duration": 1195,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
@@ -95,7 +95,7 @@
     "marge": {
       "options": {
         "reportDir": "cypress/reports",
-        "overwrite": false,
+        "overwrite": true,
         "html": true,
         "json": true
       },
