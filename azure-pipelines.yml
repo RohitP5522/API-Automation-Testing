@@ -1,18 +1,47 @@
-- script: |
-    rm -rf cypress/reports
-  displayName: 'Clean Previous Reports'
+trigger:
+  branches:
+    include:
+      - main
 
-- script: |
-    npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
-  displayName: 'Run Cypress Tests'
+schedules:
+  - cron: "0 6 * * *"  # 6 AM UTC daily
+    displayName: Daily Run
+    branches:
+      include:
+        - main
+    always: true
 
-- script: |
-    npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
-  displayName: 'Merge Mochawesome Reports'
+variables:
+  - group: EmailSecrets  # Contains EMAIL_USER and EMAIL_PASS
 
-- script: |
-    node send-email.js
-  env:
-    EMAIL_USER: $(EMAIL_USER)
-    EMAIL_PASS: $(EMAIL_PASS)
-  displayName: 'Send Cypress Report Email'
+pool:
+  name: Default  # or your agent pool name
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm ci
+    displayName: 'Install Dependencies'
+
+  - script: |
+      rm -rf cypress/reports
+    displayName: 'Clean Previous Reports'
+
+  - script: |
+      npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
+    displayName: 'Run Cypress Tests'
+
+  - script: |
+      npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+    displayName: 'Merge Mochawesome Reports'
+
+  - script: |
+      node send-email.js
+    env:
+      EMAIL_USER: $(EMAIL_USER)
+      EMAIL_PASS: $(EMAIL_PASS)
+    displayName: 'Send Cypress Report Email'
