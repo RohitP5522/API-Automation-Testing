@@ -14,7 +14,7 @@ module.exports = defineConfig({
       reqresApiKey: 'reqres-free-v1'
     },
     setupNodeEvents(on, config) {
-      // implement node event listeners if needed
+      // implement node event listeners if needed test
     }
   }
 });
